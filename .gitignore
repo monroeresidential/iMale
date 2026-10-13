@@ -1,0 +1,17 @@
+# --- the email export: never committed (repo is public) ---
+iMale-1/
+*.mbox
+*.eml
+*.mbox.*
+
+# --- plaintext record, attachments, password, and the curation script ---
+private/
+derived/
+content.json
+password.txt
+*.key
+*.bin
+
+node_modules/
+dist/
+.DS_Store

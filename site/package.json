@@ -1,0 +1,22 @@
+{
+  "name": "tenant-record",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "encrypt": "node scripts/encrypt.mjs",
+    "data": "cd .. && python3 -I derived/build_content.py && cd site && npm run encrypt",
+    "rotate": "node scripts/encrypt.mjs --new",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.7"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
