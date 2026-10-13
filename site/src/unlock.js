@@ -81,6 +81,7 @@ export function lock() {
 }
 
 const urlCache = new Map()
+const INLINE = /^(application\/pdf|image\/(png|jpeg|gif|webp))$/
 
 /** Decrypt one attachment (iv || ciphertext) and return an object URL for it. */
 export async function fileUrl(file) {
@@ -90,15 +91,18 @@ export async function fileUrl(file) {
   if (!r.ok) throw new Error(`Could not load the file (HTTP ${r.status}).`)
   const buf = new Uint8Array(await r.arrayBuffer())
   const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: buf.slice(0, 12) }, activeKey, buf.slice(12))
-  const url = URL.createObjectURL(new Blob([plain], { type: file.type || 'application/octet-stream' }))
+  // Only PDFs and raster images are given their real type. Anything else (SVG, HTML, …)
+  // could run script on this origin if opened, so it is typed as an opaque download.
+  const type = INLINE.test(file.type) ? file.type : 'application/octet-stream'
+  const url = URL.createObjectURL(new Blob([plain], { type }))
   urlCache.set(file.id, url)
   return url
 }
 
 /** Open an attachment in a new tab. The tab is opened synchronously so popup blockers allow it. */
 export async function openFile(file) {
-  const viewable = /^(application\/pdf|image\/)/.test(file.type)
-  const w = viewable ? window.open('', '_blank') : null
+  const w = INLINE.test(file.type) ? window.open('', '_blank') : null
+  if (w) w.opener = null
   try {
     const url = await fileUrl(file)
     if (w) { w.location.href = url; return }
