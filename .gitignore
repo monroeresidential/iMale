@@ -15,3 +15,7 @@ password.txt
 node_modules/
 dist/
 .DS_Store
+
+# --- lease and complaint working files: never committed ---
+Lease/
+complaint-context/

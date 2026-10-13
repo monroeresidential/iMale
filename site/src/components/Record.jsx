@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import EmailModal from './EmailModal.jsx'
 import Photos from './Photos.jsx'
 import { openFile } from '../unlock.js'
@@ -42,6 +42,22 @@ export default function Record({ content, onLock }) {
   const openIdx = list.findIndex((e) => e.id === openId)
   const openFromRecord = (id) => { setNavSet(null); setOpenId(id) }
   const openFromAnywhere = (id) => { setNavSet(events); setOpenId(id) }
+
+  // Deep links: #<email id> opens that email (also after unlocking), and the hash
+  // follows whichever email is open so its address can be copied and shared.
+  useEffect(() => {
+    const fromHash = () => {
+      const id = decodeURIComponent(location.hash.slice(1))
+      if (events.some((e) => e.id === id)) openFromAnywhere(id)
+    }
+    fromHash()
+    window.addEventListener('hashchange', fromHash)
+    return () => window.removeEventListener('hashchange', fromHash)
+  }, [events])
+  useEffect(() => {
+    const want = openId ? `#${openId}` : ''
+    if (location.hash !== want) history.replaceState(null, '', want || location.pathname + location.search)
+  }, [openId])
 
   return (
     <div className="wrap">
