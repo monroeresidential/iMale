@@ -348,4 +348,15 @@ footer code{font-family:"IBM Plex Mono",monospace;font-size:12px;background:var(
   .keydates button{grid-template-columns:1fr 20px;gap:4px 10px}
   .keydates .d{grid-column:1 / -1}
   .ev.notice{margin:0 -18px;padding-left:15px;padding-right:18px}
+
+  /* Meetings: one card per meeting instead of a table that scrolls sideways */
+  .meetings{min-width:0}
+  .meetings thead{display:none}
+  .meetings,.meetings tbody,.meetings tr,.meetings td{display:block;width:100%}
+  .meetings tr{padding:14px 0;border-bottom:1px solid var(--rule)}
+  .meetings td{border:0;padding:2px 0}
+  .meetings td:first-child{display:flex;gap:10px;align-items:baseline}
+  .meetings td:nth-child(2){color:var(--ink-3);font-size:13px}
+  .meetings td:nth-child(4){font-size:13px;color:var(--ink-3)}
+  .meetings td:last-child{padding-top:8px}
 }
